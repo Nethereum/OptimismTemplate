@@ -42,7 +42,8 @@ For L1 EVM smart contracts just press F5
 It is already preconfigured to autogenerate your code too :)
 
 ## Cross messaging example L1 to L2 and L2 to L1
-This usage the SimpleStorage.sol smart contract.
+
+This uses the SimpleStorage.sol smart contract here https://github.com/Nethereum/OptimismTemplate/blob/main/contracts/SimpleStorage.sol
 
 ```csharp
 var web3l1 = new Web3(new Account("0x754fde3f5e60ef2c7649061e06957c29017fe21032a8017132c0078e37f6193a", 31337), "http://localhost:9545");
@@ -60,9 +61,9 @@ var storageServiceL2 = await SimpleStorageL2Service.DeployContractAndGetServiceA
 var l2CrossDomainMessengerService = new OVM_L2CrossDomainMessengerService(web3l2, OVM_L2CrossDomainMessenger);
 var message = new Contracts.OVM_L2CrossDomainMessenger.ContractDefinition.SendMessageFunction()
 {
-Message = new SetValueFunction() { NewValue = "3e4cfaa8730092552d9425575e49bb542e329981000000000000000000000000".HexToByteArray() }.GetCallData(),
-Target = storageServiceL1.ContractHandler.ContractAddress,
-GasLimit = 7000000
+    Message = new SetValueFunction() { NewValue = "3e4cfaa8730092552d9425575e49bb542e329981000000000000000000000000".HexToByteArray() }.GetCallData(),
+    Target = storageServiceL1.ContractHandler.ContractAddress,
+    GasLimit = 7000000
 };
 
 var messageTransactionReceipt = await l2CrossDomainMessengerService.SendMessageRequestAndWaitForReceiptAsync(message);
@@ -80,9 +81,9 @@ Assert.Equal("3e4cfaa8730092552d9425575e49bb542e329981000000000000000000000000",
 var l1CrossDomainMessengerService = new OVM_L1CrossDomainMessengerService(web3l1, Proxy__OVM_L1CrossDomainMessenger);
 var messagel1 = new Contracts.OVM_L1CrossDomainMessenger.ContractDefinition.SendMessageFunction()
 {
-Message = new SetValueFunction() { NewValue = "3e4cfaa8730092552d9425575e49bb542e329982000000000000000000000000".HexToByteArray() }.GetCallData(),
-Target = storageServiceL2.ContractHandler.ContractAddress,
-GasLimit = 7000000
+    Message = new SetValueFunction() { NewValue = "3e4cfaa8730092552d9425575e49bb542e329982000000000000000000000000".HexToByteArray() }.GetCallData(),
+    Target = storageServiceL2.ContractHandler.ContractAddress,
+    GasLimit = 7000000
 };
 
 var messagel1TransactionReceipt = await l1CrossDomainMessengerService.SendMessageRequestAndWaitForReceiptAsync(messagel1);
