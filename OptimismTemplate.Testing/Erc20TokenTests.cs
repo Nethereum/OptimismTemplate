@@ -174,8 +174,8 @@ deployer_1              |   "ERC1820Registry": "0xB3FdF320A0bb4b9eBedf4726F0C9Bf
             var web3l1 = new Web3(new Account("0x754fde3f5e60ef2c7649061e06957c29017fe21032a8017132c0078e37f6193a", 31337), "http://localhost:9545");
             var web3l2 = new Web3(new Account("0x754fde3f5e60ef2c7649061e06957c29017fe21032a8017132c0078e37f6193a", 420), "http://localhost:8545");
 
-            //var web3l1 = new Web3(new Account("0xcf0d584dba3902252f3762d5161c4996f4b364e6e79a75c96b2e2c3e34b92162", 42), "https://kovan.infura.io/v3/7238211010344719ad14a89db874158c");
-            //var web3l2 = new Web3(new Account("0xcf0d584dba3902252f3762d5161c4996f4b364e6e79a75c96b2e2c3e34b92162", 69), "https://kovan.optimism.io");
+            //var web3l1 = new Web3(new Account("xx", 42), "https://kovan.infura.io/v3/7238211010344719ad14a89db874158c");
+            //var web3l2 = new Web3(new Account("xx", 69), "https://kovan.optimism.io");
            // ADDRESS_MANAGER = "0x72e6F5244828C10737cbC9659378B207246D26B2";
             var addressManagerService = new AddressManagerService(web3l1, ADDRESS_MANAGER);
             var OVM_L2CrossDomainMessenger = await addressManagerService.GetAddressQueryAsync("OVM_L2CrossDomainMessenger");
