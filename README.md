@@ -9,7 +9,7 @@ The first thing is to setup your enviroment to run your local l1 and l2 chains
 Your will need docker, and if you are using windows you can run this in WSL2 too.
 1. Clone https://github.com/ethereum-optimism/optimism-integration
 2. run ```docker-compose pull```
-3. then ```make up``
+3. then ```make up```
 
 The address manager provides a way to retrieve all the addresses
 
