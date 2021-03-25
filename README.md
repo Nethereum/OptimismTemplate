@@ -13,8 +13,10 @@ Your will need docker, and if you are using windows you can run this in WSL2 too
 
 The address manager provides a way to retrieve all the addresses
 
-ADDRESS_MANAGER = "0x3e4CFaa8730092552d9425575E49bB542e329981"; 
-Check the test for the accounts.
+ADDRESS_MANAGER = "0x3e4CFaa8730092552d9425575E49bB542e329981"
+
+The test accounts in L1 can be found here:
+
 https://github.com/Nethereum/OptimismTemplate/blob/main/OptimismTemplate.Testing/Erc20TokenTests.cs
 
 L1: "http://localhost:9545", CHAINID: 31337 
@@ -25,15 +27,18 @@ You will need some KETH (eth) from Kovan.
 1. L1 https://kovan.infura.io/v3/7238211010344719ad14a89db874158c CHAINID 42
 2. L2 https://kovan.optimism.io CHAINID 69
 
-The address manager provides a way to retrieve all the addresses
+The address manager provides a way to retrieve all the addresses:
+
 ADDRESS_MANAGER = "0x72e6F5244828C10737cbC9659378B207246D26B2";
 
 ## Install optimism contracts and solc
+
 RUN at root
 ```npm install @eth-optimism/contracts```
 ```npm install @eth-optimism/solc```
 
 ## COMPILING in Visual Studio code
+
 If you open your environment with visual studio code, it is already configured to compile your ovm contracts with "eth-optimism\solc"
 ![image](https://user-images.githubusercontent.com/562371/112538411-c0490d80-8da7-11eb-9a3e-01248da54623.png)
 For L1 EVM smart contracts just press F5
