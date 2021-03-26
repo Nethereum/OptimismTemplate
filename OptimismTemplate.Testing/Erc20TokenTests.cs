@@ -197,7 +197,9 @@ deployer_1              |   "ERC1820Registry": "0xB3FdF320A0bb4b9eBedf4726F0C9Bf
 
             var gatewayService = new L1ERC20GatewayService(web3l1, ovmL1ERC20GatewayReceipt.ContractAddress);
             var l2DepositedService = new L2DepositedERC20Service(web3l2, ovmL2DepositedERC20Receipt.ContractAddress);
-
+            //don't forget to init the l2DepositService
+            await l2DepositedService.InitRequestAndWaitForReceiptAsync(ovmL1ERC20GatewayReceipt.ContractAddress);
+            
             var balancesInL1 = await tokenService.BalanceOfQueryAsync(ourAdddress);
             var receiptApproval = await tokenService.ApproveRequestAndWaitForReceiptAsync(gatewayService.ContractHandler.ContractAddress, 100000);
             var receiptDeposit = await gatewayService.DepositRequestAndWaitForReceiptAsync(new DepositFunction() { Amount = 100000, Gas= 8000000 });
