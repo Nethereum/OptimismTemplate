@@ -1,8 +1,7 @@
 # OptimismTemplate
 Simple template to get started working with Optimism
 
-NOTE: WIP.
-ERC20 cross messaging not working at the moment.
+NOTE: WIP
 
 ## SETUP Local Environment
 The first thing is to setup your enviroment to run your local l1 and l2 chains
@@ -100,6 +99,57 @@ receiptMessageSent = await GetMessageTransactionReceipt(web3l2, OVM_L2CrossDomai
 value = await storageServiceL2.ValueQueryAsync();
 
 Assert.Equal("3e4cfaa8730092552d9425575e49bb542e329982000000000000000000000000", value.ToHex());
+```
+
+## Token bridge L1 to L2
+
+```csharp
+            var ourAdddress = "0x023ffdc1530468eb8c8eebc3e38380b5bc19cc5d";
+            var web3l1 = new Web3(new Account("0x754fde3f5e60ef2c7649061e06957c29017fe21032a8017132c0078e37f6193a", 31337), "http://localhost:9545");
+            var web3l2 = new Web3(new Account("0x754fde3f5e60ef2c7649061e06957c29017fe21032a8017132c0078e37f6193a", 420), "http://localhost:8545");
+ 
+            var addressManagerService = new AddressManagerService(web3l1, ADDRESS_MANAGER);
+            var OVM_L2CrossDomainMessenger = await addressManagerService.GetAddressQueryAsync("OVM_L2CrossDomainMessenger");
+            var Proxy__OVM_L1CrossDomainMessenger = await addressManagerService.GetAddressQueryAsync("Proxy__OVM_L1CrossDomainMessenger");
+
+
+            var tokenName = "OPNETH";
+            var tokenSymbol = "OPNETH";
+
+            var erc20TokenDeployment = new ERC20Deployment() { Name = tokenName, InitialSupply = Web3.Convert.ToWei(1000000000000000000), Symbol = tokenSymbol, Decimals = 18};
+
+            //Deploy our custom token
+            var tokenDeploymentReceipt = await ERC20Service.DeployContractAndWaitForReceiptAsync(web3l1, erc20TokenDeployment);
+
+            //Deploy our ERC20 contract deployed
+            var ovmL2DepositedERC20 = new L2DepositedERC20Deployment() { L2CrossDomainMessenger = OVM_L2CrossDomainMessenger, Name = tokenName, Symbol = tokenSymbol, Decimals = 18 };
+
+            var ovmL2DepositedERC20Receipt = await L2DepositedERC20Service.DeployContractAndWaitForReceiptAsync(web3l2, ovmL2DepositedERC20);
+
+            var ovmL1ERC20Gateway = new L1ERC20GatewayDeployment() { L2DepositedERC20 = ovmL2DepositedERC20Receipt.ContractAddress, L1ERC20 = tokenDeploymentReceipt.ContractAddress, L1messenger = Proxy__OVM_L1CrossDomainMessenger };
+
+            var ovmL1ERC20GatewayReceipt = await L1ERC20GatewayService.DeployContractAndWaitForReceiptAsync(web3l1, ovmL1ERC20Gateway);
+
+            //Creating a new service
+            var tokenService = new ERC20Service(web3l1, tokenDeploymentReceipt.ContractAddress);
+
+            var gatewayService = new L1ERC20GatewayService(web3l1, ovmL1ERC20GatewayReceipt.ContractAddress);
+            var l2DepositedService = new L2DepositedERC20Service(web3l2, ovmL2DepositedERC20Receipt.ContractAddress);
+            //don't forget to init the l2DepositService
+            await l2DepositedService.InitRequestAndWaitForReceiptAsync(ovmL1ERC20GatewayReceipt.ContractAddress);
+            
+            var balancesInL1 = await tokenService.BalanceOfQueryAsync(ourAdddress);
+            var receiptApproval = await tokenService.ApproveRequestAndWaitForReceiptAsync(gatewayService.ContractHandler.ContractAddress, 100000);
+            var receiptDeposit = await gatewayService.DepositRequestAndWaitForReceiptAsync(new DepositFunction() { Amount = 100000, Gas= 8000000 });
+
+            balancesInL1 = await tokenService.BalanceOfQueryAsync(ourAdddress);
+            //what the watcher does.. we do already have the txn receipt.. but for demo purpouses
+            var messageHashes = GetMessageHashes(receiptDeposit);
+
+            var txnReceipt = await GetMessageTransactionReceipt(web3l2, OVM_L2CrossDomainMessenger, messageHashes.First());
+
+            var balancesInL2 = await l2DepositedService.BalanceOfQueryAsync(ourAdddress);
+
 ```
 
 ## Credits
