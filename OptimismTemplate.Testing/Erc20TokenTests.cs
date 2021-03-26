@@ -96,12 +96,6 @@ deployer_1              |   "OVM_ChainStorageContainer:CTC:queue": "0x6C024eeE10
 deployer_1              |   "OVM_ChainStorageContainer:SCC:batches": "0xcD46d1D296466e7F2842A718576d49576fe76a9f",
 deployer_1              |   "ERC1820Registry": "0xB3FdF320A0bb4b9eBedf4726F0C9Bf49D1268cf9"
 
-
-
-        //l1local "http://localhost:9545", chainId: 31337 
-        //l2Local: "http://localhost:9545", chainId: 420 
-        //l2Kovan: "https://kovan.optimism.io", chainId: 69 
-
         //string L2_CROSS_DOMAIN_MESSENGER_ADDRESS = "0x4200000000000000000000000000000000000007";
         //string L1_MESSENGER = "0x6418E5Da52A3d7543d393ADD3Fa98B0795d27736";
         */
@@ -167,13 +161,10 @@ deployer_1              |   "ERC1820Registry": "0xB3FdF320A0bb4b9eBedf4726F0C9Bf
         [Fact]
         public async void ShouldTransferToken()
         {
-
-            //CHAINID 31337
-            //PORT 9454
             var ourAdddress = "0x023ffdc1530468eb8c8eebc3e38380b5bc19cc5d";
             var web3l1 = new Web3(new Account("0x754fde3f5e60ef2c7649061e06957c29017fe21032a8017132c0078e37f6193a", 31337), "http://localhost:9545");
             var web3l2 = new Web3(new Account("0x754fde3f5e60ef2c7649061e06957c29017fe21032a8017132c0078e37f6193a", 420), "http://localhost:8545");
-
+            //kovan 
             //var web3l1 = new Web3(new Account("xx", 42), "https://kovan.infura.io/v3/7238211010344719ad14a89db874158c");
             //var web3l2 = new Web3(new Account("xx", 69), "https://kovan.optimism.io");
            // ADDRESS_MANAGER = "0x72e6F5244828C10737cbC9659378B207246D26B2";
@@ -240,7 +231,7 @@ deployer_1              |   "ERC1820Registry": "0xB3FdF320A0bb4b9eBedf4726F0C9Bf
             }
             return sentMessages;
         }
-
+        //the watcher in optimism
         public async Task<TransactionReceipt> GetMessageTransactionReceipt(Web3 web3, string messengerAddress, byte[] msgHash)
         {
             //this needs a time out cancellation process.
