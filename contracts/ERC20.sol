@@ -1,14 +1,15 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.5.16 <0.8.0;
+import {iOVM_ERC20} from "./optimism/iOVM/precompiles/iOVM_ERC20.sol";
 import {IERC20} from "./interfaces/IERC20.sol";
 import {SafeMath} from './SafeMath.sol';
 
-contract ERC20 is IERC20 {
+contract ERC20 is iOVM_ERC20 {
     using SafeMath for uint;
-
-    string public override name;
-    string public override symbol;
-    uint8 public override immutable decimals;
+    
+    string public name;
+    string public symbol;
+    uint8 public immutable decimals;
     uint public override totalSupply;
     mapping(address => uint) public override balanceOf;
     mapping(address => mapping(address => uint)) public override allowance;

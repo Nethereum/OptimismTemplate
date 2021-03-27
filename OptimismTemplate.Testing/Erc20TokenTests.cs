@@ -14,19 +14,22 @@ using System.Threading;
 using Nethereum.BlockchainProcessing.ProgressRepositories;
 using OptimismTemplate.Contracts.L2DepositedERC20.ContractDefinition;
 using OptimismTemplate.Contracts.L2DepositedERC20;
-using TransferEventDTO = OptimismTemplate.Contracts.ERC20.ContractDefinition.TransferEventDTO;
-using OptimismTemplate.Contracts.L1ERC20Gateway.ContractDefinition;
-using OptimismTemplate.Contracts.L1ERC20Gateway;
 using System.Runtime.InteropServices;
 using OptimismTemplate.Contracts.OVM_L1CrossDomainMessenger.ContractDefinition;
 using Nethereum.Hex.HexConvertors.Extensions;
 using System.Linq;
-using OptimismTemplate.Contracts.AddressManager;
 using OptimismTemplate.Contracts.SimpleStorage;
 using OptimismTemplate.Contracts.SimpleStorageL2;
 using OptimismTemplate.Contracts.OVM_L2CrossDomainMessenger;
 using OptimismTemplate.Contracts.SimpleStorage.ContractDefinition;
 using OptimismTemplate.Contracts.OVM_L1CrossDomainMessenger;
+using OptimismTemplate.Contracts.OVM_L1ERC20Gateway.ContractDefinition;
+using OptimismTemplate.Contracts.OVM_L1ERC20Gateway;
+using DepositFunction = OptimismTemplate.Contracts.OVM_L1ERC20Gateway.ContractDefinition.DepositFunction;
+using OptimismTemplate.Contracts.Lib_AddressManager;
+using OptimismTemplate.Contracts.OVM_ETH;
+using Nethereum.BlockchainProcessing.BlockStorage.Entities.Mapping;
+using OptimismTemplate.Contracts.OVM_L1ETHGateway;
 
 namespace OptimismTemplate.Testing
 {
@@ -96,10 +99,13 @@ deployer_1              |   "OVM_ChainStorageContainer:CTC:queue": "0x6C024eeE10
 deployer_1              |   "OVM_ChainStorageContainer:SCC:batches": "0xcD46d1D296466e7F2842A718576d49576fe76a9f",
 deployer_1              |   "ERC1820Registry": "0xB3FdF320A0bb4b9eBedf4726F0C9Bf49D1268cf9"
 
+<<<<<<< Updated upstream
         //string L2_CROSS_DOMAIN_MESSENGER_ADDRESS = "0x4200000000000000000000000000000000000007";
         //string L1_MESSENGER = "0x6418E5Da52A3d7543d393ADD3Fa98B0795d27736";
+=======
+>>>>>>> Stashed changes
         */
-
+        //This is the addres manager for the local node
         string ADDRESS_MANAGER = "0x3e4CFaa8730092552d9425575E49bB542e329981";
 
         [Fact]
@@ -108,7 +114,11 @@ deployer_1              |   "ERC1820Registry": "0xB3FdF320A0bb4b9eBedf4726F0C9Bf
             var web3l1 = new Web3(new Account("0x754fde3f5e60ef2c7649061e06957c29017fe21032a8017132c0078e37f6193a", 31337), "http://localhost:9545");
             var web3l2 = new Web3(new Account("0x754fde3f5e60ef2c7649061e06957c29017fe21032a8017132c0078e37f6193a", 420), "http://localhost:8545");
 
-            var addressManagerService = new AddressManagerService(web3l1, ADDRESS_MANAGER);
+            //var web3l1 = new Web3(new Account("", 42), "https://kovan.infura.io/v3/7238211010344719ad14a89db874158c");
+            //var web3l2 = new Web3(new Account("", 69), "https://kovan.optimism.io");
+            //ADDRESS_MANAGER = "0x72e6F5244828C10737cbC9659378B207246D26B2";
+
+            var addressManagerService = new Lib_AddressManagerService(web3l1, ADDRESS_MANAGER);
             var OVM_L2CrossDomainMessenger = await addressManagerService.GetAddressQueryAsync("OVM_L2CrossDomainMessenger");
             var Proxy__OVM_L1CrossDomainMessenger = await addressManagerService.GetAddressQueryAsync("Proxy__OVM_L1CrossDomainMessenger");
 
@@ -125,7 +135,7 @@ deployer_1              |   "ERC1820Registry": "0xB3FdF320A0bb4b9eBedf4726F0C9Bf
                 GasLimit = 7000000
             };
 
-            var messageTransactionReceipt = await l2CrossDomainMessengerService.SendMessageRequestAndWaitForReceiptAsync(message);
+             var messageTransactionReceipt = await l2CrossDomainMessengerService.SendMessageRequestAndWaitForReceiptAsync(message);
 
             var messageHashes = GetMessageHashes(messageTransactionReceipt);
 
@@ -159,50 +169,129 @@ deployer_1              |   "ERC1820Registry": "0xB3FdF320A0bb4b9eBedf4726F0C9Bf
         }
 
         [Fact]
-        public async void ShouldTransferToken()
+        public async void ShouldTransferEther()
         {
             var ourAdddress = "0x023ffdc1530468eb8c8eebc3e38380b5bc19cc5d";
             var web3l1 = new Web3(new Account("0x754fde3f5e60ef2c7649061e06957c29017fe21032a8017132c0078e37f6193a", 31337), "http://localhost:9545");
             var web3l2 = new Web3(new Account("0x754fde3f5e60ef2c7649061e06957c29017fe21032a8017132c0078e37f6193a", 420), "http://localhost:8545");
+<<<<<<< Updated upstream
             //kovan 
             //var web3l1 = new Web3(new Account("xx", 42), "https://kovan.infura.io/v3/7238211010344719ad14a89db874158c");
             //var web3l2 = new Web3(new Account("xx", 69), "https://kovan.optimism.io");
            // ADDRESS_MANAGER = "0x72e6F5244828C10737cbC9659378B207246D26B2";
             var addressManagerService = new AddressManagerService(web3l1, ADDRESS_MANAGER);
+=======
+
+            //var ourAdddress = "0xe612205919814b1995D861Bdf6C2fE2f20cDBd68";
+            //var web3l1 = new Web3(new Account("", 42), "https://kovan.infura.io/v3/7238211010344719ad14a89db874158c");
+            //var web3l2 = new Web3(new Account("", 69), "https://kovan.optimism.io");
+            //ADDRESS_MANAGER = "0x72e6F5244828C10737cbC9659378B207246D26B2";
+            var addressManagerService = new Lib_AddressManagerService(web3l1, ADDRESS_MANAGER);
+>>>>>>> Stashed changes
             var OVM_L2CrossDomainMessenger = await addressManagerService.GetAddressQueryAsync("OVM_L2CrossDomainMessenger");
             var Proxy__OVM_L1CrossDomainMessenger = await addressManagerService.GetAddressQueryAsync("Proxy__OVM_L1CrossDomainMessenger");
+            var OVM_L1ETHGateway_Address = await addressManagerService.GetAddressQueryAsync("OVM_L1ETHGateway");
+            var OVM_ETH_Address = await addressManagerService.GetAddressQueryAsync("OVM_ETH");
+            OVM_ETH_Address = "0x4200000000000000000000000000000000000006"; // <-- This the token you are looking for
+
+            var gatewayL1EthService = new OVM_L1ETHGatewayService(web3l1, OVM_L1ETHGateway_Address);
+
+            var ovmWEthTokenDepositedService = new OVM_ETHService(web3l2, OVM_ETH_Address);
+
+            var amount = Web3.Convert.ToWei(1);
+            var currentBalanceInL2 = await ovmWEthTokenDepositedService.BalanceOfQueryAsync(ourAdddress);
+            var depositEther = new OptimismTemplate.Contracts.OVM_L1ETHGateway.ContractDefinition.DepositFunction()
+            {
+                AmountToSend = amount,
+                Gas = 700000
+            };
+
+            var receiptDeposit = await gatewayL1EthService.DepositRequestAndWaitForReceiptAsync(depositEther);
+
+            //what the watcher does.. we do already have the txn receipt.. but for demo purpouses
+            var messageHashes = GetMessageHashes(receiptDeposit);
+
+            var txnReceipt = await GetMessageTransactionReceipt(web3l2, OVM_L2CrossDomainMessenger, messageHashes.First());
+            var ovml1tokenGateway = await ovmWEthTokenDepositedService.L1TokenGatewayQueryAsync();
+            var ovmEthMessenger = await ovmWEthTokenDepositedService.MessengerQueryAsync();
 
 
+
+            var error = await web3l2.Eth.GetContractTransactionErrorReason.SendRequestAsync(txnReceipt.TransactionHash);
+             
+            var balancesInL2 = await ovmWEthTokenDepositedService.BalanceOfQueryAsync(ourAdddress);
+
+            Assert.Equal(amount, balancesInL2 - currentBalanceInL2);
+
+            var receiptWidthdraw = await ovmWEthTokenDepositedService.WithdrawRequestAndWaitForReceiptAsync(amount);
+
+            messageHashes = GetMessageHashes(receiptWidthdraw);
+
+            txnReceipt = await GetMessageTransactionReceipt(web3l1, Proxy__OVM_L1CrossDomainMessenger, messageHashes.First());
+
+            balancesInL2 = await ovmWEthTokenDepositedService.BalanceOfQueryAsync(ourAdddress);
+
+            Assert.Equal(currentBalanceInL2, balancesInL2);
+        }
+
+        [Fact]
+        public async void ShouldTransferToken()
+        {
+
+            //CHAINID 31337
+            //PORT 9454
+            var ourAdddress = "0x023ffdc1530468eb8c8eebc3e38380b5bc19cc5d";
+            var web3l1 = new Web3(new Account("0x754fde3f5e60ef2c7649061e06957c29017fe21032a8017132c0078e37f6193a", 31337), "http://localhost:9545");
+            var web3l2 = new Web3(new Account("0x754fde3f5e60ef2c7649061e06957c29017fe21032a8017132c0078e37f6193a", 420), "http://localhost:8545");
+
+            //var ourAdddress = "0xe612205919814b1995D861Bdf6C2fE2f20cDBd68";
+            //var web3l1 = new Web3(new Account("", 42), "https://kovan.infura.io/v3/7238211010344719ad14a89db874158c");
+            //var web3l2 = new Web3(new Account("", 69), "https://kovan.optimism.io");
+            //ADDRESS_MANAGER = "0x72e6F5244828C10737cbC9659378B207246D26B2";
+            var addressManagerService = new Lib_AddressManagerService(web3l1, ADDRESS_MANAGER);
+            var OVM_L2CrossDomainMessenger = await addressManagerService.GetAddressQueryAsync("OVM_L2CrossDomainMessenger");
+            var Proxy__OVM_L1CrossDomainMessenger = await addressManagerService.GetAddressQueryAsync("Proxy__OVM_L1CrossDomainMessenger");
+ 
             var tokenName = "OPNETH";
             var tokenSymbol = "OPNETH";
 
-            var erc20TokenDeployment = new ERC20Deployment() { Name = tokenName, InitialSupply = Web3.Convert.ToWei(1000000000000000000), Symbol = tokenSymbol, Decimals = 18};
+            var erc20TokenDeployment = new ERC20Deployment()
+            { Name = tokenName, InitialSupply = 100000, Symbol = tokenSymbol, Decimals = 18 };
 
             //Deploy our custom token
             var tokenDeploymentReceipt = await ERC20Service.DeployContractAndWaitForReceiptAsync(web3l1, erc20TokenDeployment);
 
             //Deploy our ERC20 contract deployed
-            var ovmL2DepositedERC20 = new L2DepositedERC20Deployment() { L2CrossDomainMessenger = OVM_L2CrossDomainMessenger, Name = tokenName, Symbol = tokenSymbol, Decimals = 18 };
+             var ovmL2DepositedERC20 = new L2DepositedERC20Deployment()
+            { L2CrossDomainMessenger = OVM_L2CrossDomainMessenger, Name = "OVM_-" + tokenName, Symbol = "ovm_" + tokenSymbol, Decimals = 18 };
 
             var ovmL2DepositedERC20Receipt = await L2DepositedERC20Service.DeployContractAndWaitForReceiptAsync(web3l2, ovmL2DepositedERC20);
 
-            var ovmL1ERC20Gateway = new L1ERC20GatewayDeployment() { L2DepositedERC20 = ovmL2DepositedERC20Receipt.ContractAddress, L1ERC20 = tokenDeploymentReceipt.ContractAddress, L1messenger = Proxy__OVM_L1CrossDomainMessenger };
+            var ovmL1ERC20Gateway = new OVM_L1ERC20GatewayDeployment()
+            { L2DepositedERC20 = ovmL2DepositedERC20Receipt.ContractAddress, L1ERC20 = tokenDeploymentReceipt.ContractAddress, L1messenger = Proxy__OVM_L1CrossDomainMessenger };
 
-            var ovmL1ERC20GatewayReceipt = await L1ERC20GatewayService.DeployContractAndWaitForReceiptAsync(web3l1, ovmL1ERC20Gateway);
-
+          
+            var ovmL1ERC20GatewayReceipt = await OVM_L1ERC20GatewayService.DeployContractAndWaitForReceiptAsync(web3l1, ovmL1ERC20Gateway);
 
 
             //Creating a new service
             var tokenService = new ERC20Service(web3l1, tokenDeploymentReceipt.ContractAddress);
 
-            var gatewayService = new L1ERC20GatewayService(web3l1, ovmL1ERC20GatewayReceipt.ContractAddress);
+            var gatewayService = new OVM_L1ERC20GatewayService(web3l1, ovmL1ERC20GatewayReceipt.ContractAddress);
+
             var l2DepositedService = new L2DepositedERC20Service(web3l2, ovmL2DepositedERC20Receipt.ContractAddress);
+<<<<<<< Updated upstream
             //don't forget to init the l2DepositService
             await l2DepositedService.InitRequestAndWaitForReceiptAsync(ovmL1ERC20GatewayReceipt.ContractAddress);
             
+=======
+
+            await l2DepositedService.InitRequestAndWaitForReceiptAsync(ovmL1ERC20GatewayReceipt.ContractAddress);
+
+>>>>>>> Stashed changes
             var balancesInL1 = await tokenService.BalanceOfQueryAsync(ourAdddress);
-            var receiptApproval = await tokenService.ApproveRequestAndWaitForReceiptAsync(gatewayService.ContractHandler.ContractAddress, 100000);
-            var receiptDeposit = await gatewayService.DepositRequestAndWaitForReceiptAsync(new DepositFunction() { Amount = 100000, Gas= 8000000 });
+            var receiptApproval = await tokenService.ApproveRequestAndWaitForReceiptAsync(gatewayService.ContractHandler.ContractAddress, 1);
+            var receiptDeposit = await gatewayService.DepositRequestAndWaitForReceiptAsync(new DepositFunction() { Amount = 1, Gas = 7000000 });
 
             balancesInL1 = await tokenService.BalanceOfQueryAsync(ourAdddress);
             //what the watcher does.. we do already have the txn receipt.. but for demo purpouses
@@ -212,8 +301,17 @@ deployer_1              |   "ERC1820Registry": "0xB3FdF320A0bb4b9eBedf4726F0C9Bf
 
             var balancesInL2 = await l2DepositedService.BalanceOfQueryAsync(ourAdddress);
 
+            Assert.Equal(1, balancesInL2);
 
+            var receiptWidthdraw = await l2DepositedService.WithdrawRequestAndWaitForReceiptAsync(1);
 
+            messageHashes = GetMessageHashes(receiptWidthdraw);
+
+            txnReceipt = await GetMessageTransactionReceipt(web3l1, Proxy__OVM_L1CrossDomainMessenger, messageHashes.First());
+
+            balancesInL2 = await l2DepositedService.BalanceOfQueryAsync(ourAdddress);
+
+            Assert.Equal(0, balancesInL2);
         }
 
         public async Task<List<byte[]>> GetMessageHashes(Web3 web3, string txnHash)
