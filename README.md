@@ -1,12 +1,7 @@
 # OptimismTemplate
-Simple template to get started working with Optimism
+Simple template to get started example of working with Optimism
 
 NOTE: WIP
-TODO: 
-+ Make a proper library
-+ Create a submodule of optimism contracts
-+ Deployment L1
-+ NFT test / example
 
 ## SETUP Local Environment
 The first thing is to setup your enviroment to run your local l1 and l2 chains
@@ -160,3 +155,8 @@ Assert.Equal("3e4cfaa8730092552d9425575e49bb542e329982000000000000000000000000",
 ## Credits
 * The Optimism team! All based on the tutorials here https://github.com/ethereum-optimism/optimism-tutorial
 and integration tests https://github.com/ethereum-optimism/integration-tests/tree/master/contracts
+
+TODO: 
++ Make a proper library for contract definitions, creating a submodule of optimism contracts
++ This should include Deployment L1, and helpers watchers
++ NFT test / example
