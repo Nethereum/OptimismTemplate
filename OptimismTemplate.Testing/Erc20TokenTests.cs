@@ -99,11 +99,6 @@ deployer_1              |   "OVM_ChainStorageContainer:CTC:queue": "0x6C024eeE10
 deployer_1              |   "OVM_ChainStorageContainer:SCC:batches": "0xcD46d1D296466e7F2842A718576d49576fe76a9f",
 deployer_1              |   "ERC1820Registry": "0xB3FdF320A0bb4b9eBedf4726F0C9Bf49D1268cf9"
 
-<<<<<<< Updated upstream
-        //string L2_CROSS_DOMAIN_MESSENGER_ADDRESS = "0x4200000000000000000000000000000000000007";
-        //string L1_MESSENGER = "0x6418E5Da52A3d7543d393ADD3Fa98B0795d27736";
-=======
->>>>>>> Stashed changes
         */
         //This is the addres manager for the local node
         string ADDRESS_MANAGER = "0x3e4CFaa8730092552d9425575E49bB542e329981";
@@ -174,20 +169,9 @@ deployer_1              |   "ERC1820Registry": "0xB3FdF320A0bb4b9eBedf4726F0C9Bf
             var ourAdddress = "0x023ffdc1530468eb8c8eebc3e38380b5bc19cc5d";
             var web3l1 = new Web3(new Account("0x754fde3f5e60ef2c7649061e06957c29017fe21032a8017132c0078e37f6193a", 31337), "http://localhost:9545");
             var web3l2 = new Web3(new Account("0x754fde3f5e60ef2c7649061e06957c29017fe21032a8017132c0078e37f6193a", 420), "http://localhost:8545");
-<<<<<<< Updated upstream
-            //kovan 
-            //var web3l1 = new Web3(new Account("xx", 42), "https://kovan.infura.io/v3/7238211010344719ad14a89db874158c");
-            //var web3l2 = new Web3(new Account("xx", 69), "https://kovan.optimism.io");
-           // ADDRESS_MANAGER = "0x72e6F5244828C10737cbC9659378B207246D26B2";
-            var addressManagerService = new AddressManagerService(web3l1, ADDRESS_MANAGER);
-=======
 
-            //var ourAdddress = "0xe612205919814b1995D861Bdf6C2fE2f20cDBd68";
-            //var web3l1 = new Web3(new Account("", 42), "https://kovan.infura.io/v3/7238211010344719ad14a89db874158c");
-            //var web3l2 = new Web3(new Account("", 69), "https://kovan.optimism.io");
-            //ADDRESS_MANAGER = "0x72e6F5244828C10737cbC9659378B207246D26B2";
             var addressManagerService = new Lib_AddressManagerService(web3l1, ADDRESS_MANAGER);
->>>>>>> Stashed changes
+
             var OVM_L2CrossDomainMessenger = await addressManagerService.GetAddressQueryAsync("OVM_L2CrossDomainMessenger");
             var Proxy__OVM_L1CrossDomainMessenger = await addressManagerService.GetAddressQueryAsync("Proxy__OVM_L1CrossDomainMessenger");
             var OVM_L1ETHGateway_Address = await addressManagerService.GetAddressQueryAsync("OVM_L1ETHGateway");
@@ -280,15 +264,10 @@ deployer_1              |   "ERC1820Registry": "0xB3FdF320A0bb4b9eBedf4726F0C9Bf
             var gatewayService = new OVM_L1ERC20GatewayService(web3l1, ovmL1ERC20GatewayReceipt.ContractAddress);
 
             var l2DepositedService = new L2DepositedERC20Service(web3l2, ovmL2DepositedERC20Receipt.ContractAddress);
-<<<<<<< Updated upstream
+
             //don't forget to init the l2DepositService
             await l2DepositedService.InitRequestAndWaitForReceiptAsync(ovmL1ERC20GatewayReceipt.ContractAddress);
-            
-=======
 
-            await l2DepositedService.InitRequestAndWaitForReceiptAsync(ovmL1ERC20GatewayReceipt.ContractAddress);
-
->>>>>>> Stashed changes
             var balancesInL1 = await tokenService.BalanceOfQueryAsync(ourAdddress);
             var receiptApproval = await tokenService.ApproveRequestAndWaitForReceiptAsync(gatewayService.ContractHandler.ContractAddress, 1);
             var receiptDeposit = await gatewayService.DepositRequestAndWaitForReceiptAsync(new DepositFunction() { Amount = 1, Gas = 7000000 });
