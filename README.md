@@ -2,8 +2,11 @@
 Simple template to get started working with Optimism
 
 NOTE: WIP
-TODO: + Token withdrawl l2 to l1
-      + ETH bridge example
+TODO: 
++ Make a proper library
++ Create a submodule of optimism contracts
++ Deployment L1
++ NFT test / example
 
 ## SETUP Local Environment
 The first thing is to setup your enviroment to run your local l1 and l2 chains
