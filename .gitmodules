@@ -1,0 +1,3 @@
+[submodule "Optimism/contracts"]
+	path = Optimism/contracts
+	url = https://github.com/ethereum-optimism/contracts.git

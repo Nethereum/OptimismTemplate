@@ -1,0 +1,9 @@
+{
+    "projectName": "Optimism",
+    "namespace": "Optimism.Contracts",
+    "lang": 0,
+    "useFolderAsNamespace": true,
+    "ignorePrefixFolder": "contracts/contracts/optimistic-ethereum",
+    "autoCodeGen": true,
+    "projectPath": "./Optimism"
+}
