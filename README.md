@@ -157,6 +157,7 @@ Assert.Equal("3e4cfaa8730092552d9425575e49bb542e329982000000000000000000000000",
 and integration tests https://github.com/ethereum-optimism/integration-tests/tree/master/contracts
 
 TODO: 
-+ Make a proper library for contract definitions, creating a submodule of optimism contracts
-+ This should include Deployment L1, and helpers watchers
++ Make a proper library for contract definitions, creating a submodule of optimism contracts (done ish)
++ helpers watchers in library (done ish)
++ This should include Deployment L1
 + NFT test / example
