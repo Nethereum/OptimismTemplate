@@ -36,7 +36,7 @@ namespace Optimism
         }
 
 
-        public async Task<TransactionReceipt> GetCrossMessageMessageTransactionReceipt(Web3 web3layerToReceiveMessage, string messengerAddress, byte[] msgHash, CancellationTokenSource tokenSource = null, int numberOfPastBlocks = 1000 )
+        public async Task<TransactionReceipt> GetCrossMessageMessageTransactionReceipt(Web3 web3layerToReceiveMessage, string messengerAddress, byte[] msgHash, CancellationToken token = default(CancellationToken), int numberOfPastBlocks = 1000 )
         {
             //this needs a time out cancellation process.
             var blockNumber = await web3layerToReceiveMessage.Eth.Blocks.GetBlockNumber.SendRequestAsync();
@@ -51,7 +51,11 @@ namespace Optimism
             while (!logsFiltered.Any())
             {
                 Thread.Sleep(1000);
-                tokenSource?.Token.ThrowIfCancellationRequested();
+                if (token != CancellationToken.None)
+                {
+                    token.ThrowIfCancellationRequested();
+                }
+
                 logs = await eventRelayedMessage.GetAllChanges(filterInput);
                 logsFiltered = logs.Where(x => x.Event.MsgHash.ToHex() == msgHash.ToHex());
             }

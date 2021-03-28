@@ -5,11 +5,18 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="Ipfs.Http.Client" Version="0.33.0" />
         <PackageReference Include="Nethereum.Web3" Version="3.8.0" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\..\Optimism\Optimism\Optimism.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update="Images\image1.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
     
 </Project>

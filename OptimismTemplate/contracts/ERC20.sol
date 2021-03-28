@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.5.16 <0.8.0;
-import {iOVM_ERC20} from "./optimism/iOVM/precompiles/iOVM_ERC20.sol";
-import {IERC20} from "./interfaces/IERC20.sol";
+import {iOVM_ERC20} from "@eth-optimism/contracts/build/contracts/iOVM/precompiles/iOVM_ERC20.sol";
 import {SafeMath} from './SafeMath.sol';
 
 contract ERC20 is iOVM_ERC20 {
