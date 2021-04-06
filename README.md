@@ -1,8 +1,6 @@
 # OptimismTemplate
 Simple template to get started example of working with Optimism
 
-NOTE: WIP
-
 ## SETUP Local Environment
 The first thing is to setup your enviroment to run your local l1 and l2 chains
 Your will need docker, and if you are using windows you can run this in WSL2 too.
