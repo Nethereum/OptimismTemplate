@@ -1,0 +1,6 @@
+{
+  "name": "optimismtemplate",
+  "dependencies": {
+    "@eth-optimism/solc": "^0.7.6-alpha.1",
+  }
+}
