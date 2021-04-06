@@ -205,10 +205,11 @@ When you run this sample, you will see your browser open the NFT image:
 
 
 ## Credits
-* The Optimism team! All based on the tutorials here https://github.com/ethereum-optimism/optimism-tutorial
-and integration tests https://github.com/ethereum-optimism/integration-tests/tree/master/contracts
+* The Optimism team! 
+* Examples based around the tutorials here https://github.com/ethereum-optimism/optimism-tutorial
+and the integration tests https://github.com/ethereum-optimism/integration-tests/tree/master/contracts
 
 ## TODO: 
 + Make a proper library for contract definitions, creating a submodule of optimism contracts (done ish)
-+ helpers watchers in library (done ish)
++ Helpers watchers in library (done ish)
 + Make a Deployment L1 Library
