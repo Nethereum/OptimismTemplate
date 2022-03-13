@@ -1,17 +1,18 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.5.16 <0.8.0;
-import {iOVM_ERC20} from "@eth-optimism/contracts/build/contracts/iOVM/precompiles/iOVM_ERC20.sol";
+pragma solidity >=0.5.16 <0.9.0;
 import {SafeMath} from './SafeMath.sol';
 
-contract ERC20 is iOVM_ERC20 {
+contract ERC20  {
     using SafeMath for uint;
-    
+
+    event Transfer(address indexed from, address indexed to, uint256 value);
+    event Approval(address indexed owner, address indexed spender, uint256 value);
     string public name;
     string public symbol;
     uint8 public immutable decimals;
-    uint public override totalSupply;
-    mapping(address => uint) public override balanceOf;
-    mapping(address => mapping(address => uint)) public override allowance;
+    uint public  totalSupply;
+    mapping(address => uint) public  balanceOf;
+    mapping(address => mapping(address => uint)) public  allowance;
 
     constructor(
         uint8 _decimals,
@@ -49,18 +50,18 @@ contract ERC20 is iOVM_ERC20 {
         emit Transfer(from, address(0), value);
     }
 
-    function approve(address spender, uint value) external override returns (bool) {
+    function approve(address spender, uint value) external  returns (bool) {
         _approve(msg.sender, spender, value);
         return true;
     }
 
-    function transfer(address to, uint value) external override returns (bool) {
+    function transfer(address to, uint value) external  returns (bool) {
         _transfer(msg.sender, to, value);
         return true;
     }
 
-    function transferFrom(address from, address to, uint value) external override returns (bool) {
-        if (allowance[from][msg.sender] != uint(-1)) {
+    function transferFrom(address from, address to, uint value) external  returns (bool) {
+        if (allowance[from][msg.sender] != 0) {
             allowance[from][msg.sender] = allowance[from][msg.sender].sub(value);
         }
         _transfer(from, to, value);

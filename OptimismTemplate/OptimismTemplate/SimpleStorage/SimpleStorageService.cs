@@ -68,6 +68,17 @@ namespace OptimismTemplate.Contracts.SimpleStorage
              return ContractHandler.SendRequestAndWaitForReceiptAsync(dumbSetValueFunction, cancellationToken);
         }
 
+        public Task<string> MessengerQueryAsync(MessengerFunction messengerFunction, BlockParameter blockParameter = null)
+        {
+            return ContractHandler.QueryAsync<MessengerFunction, string>(messengerFunction, blockParameter);
+        }
+
+        
+        public Task<string> MessengerQueryAsync(BlockParameter blockParameter = null)
+        {
+            return ContractHandler.QueryAsync<MessengerFunction, string>(null, blockParameter);
+        }
+
         public Task<string> MsgSenderQueryAsync(MsgSenderFunction msgSenderFunction, BlockParameter blockParameter = null)
         {
             return ContractHandler.QueryAsync<MsgSenderFunction, string>(msgSenderFunction, blockParameter);
@@ -77,6 +88,36 @@ namespace OptimismTemplate.Contracts.SimpleStorage
         public Task<string> MsgSenderQueryAsync(BlockParameter blockParameter = null)
         {
             return ContractHandler.QueryAsync<MsgSenderFunction, string>(null, blockParameter);
+        }
+
+        public Task<string> SendValueRequestAsync(SendValueFunction sendValueFunction)
+        {
+             return ContractHandler.SendRequestAsync(sendValueFunction);
+        }
+
+        public Task<TransactionReceipt> SendValueRequestAndWaitForReceiptAsync(SendValueFunction sendValueFunction, CancellationTokenSource cancellationToken = null)
+        {
+             return ContractHandler.SendRequestAndWaitForReceiptAsync(sendValueFunction, cancellationToken);
+        }
+
+        public Task<string> SendValueRequestAsync(string crossDomainTarget, uint gasLimit, byte[] message)
+        {
+            var sendValueFunction = new SendValueFunction();
+                sendValueFunction.CrossDomainTarget = crossDomainTarget;
+                sendValueFunction.GasLimit = gasLimit;
+                sendValueFunction.Message = message;
+            
+             return ContractHandler.SendRequestAsync(sendValueFunction);
+        }
+
+        public Task<TransactionReceipt> SendValueRequestAndWaitForReceiptAsync(string crossDomainTarget, uint gasLimit, byte[] message, CancellationTokenSource cancellationToken = null)
+        {
+            var sendValueFunction = new SendValueFunction();
+                sendValueFunction.CrossDomainTarget = crossDomainTarget;
+                sendValueFunction.GasLimit = gasLimit;
+                sendValueFunction.Message = message;
+            
+             return ContractHandler.SendRequestAndWaitForReceiptAsync(sendValueFunction, cancellationToken);
         }
 
         public Task<string> SetValueRequestAsync(SetValueFunction setValueFunction)

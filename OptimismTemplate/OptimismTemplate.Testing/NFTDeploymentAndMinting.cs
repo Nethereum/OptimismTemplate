@@ -4,14 +4,17 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using ERC721ContractLibrary.Testing;
 using Ipfs;
 using Ipfs.Http;
 using Nethereum.Contracts;
+using Nethereum.Util;
 using Nethereum.Web3;
 using Nethereum.Web3.Accounts;
 using Newtonsoft.Json;
-using OptimismTemplate.Contracts.MyERC721;
-using OptimismTemplate.Contracts.MyERC721.ContractDefinition;
+using OptimismTemplate.Contracts.ERC721EnumerableUriStorage;
+using OptimismTemplate.Contracts.ERC721EnumerableUriStorage.ContractDefinition;
+
 using Xunit;
 
 namespace OptimismTemplate.Testing
@@ -22,85 +25,58 @@ namespace OptimismTemplate.Testing
         [Fact]
         public async void ShouldDeployContractCreateNftMetadataUploadToIpfsAndMint()
         {
-            var web3l2 = new Web3(new Account("0x754fde3f5e60ef2c7649061e06957c29017fe21032a8017132c0078e37f6193a", 420), "http://localhost:8545");
-            var ourAdddress = "0x023ffdc1530468eb8c8eebc3e38380b5bc19cc5d";
-            var myERC721Deployment = new MyERC721Deployment()
+            //This is the same as ERC721 in mainnet
+          
+            var web3 = new Web3(new Account("YOUR PRIVATE KEY", 69), "https://kovan.optimism.io");
+            web3.Eth.TransactionManager.UseLegacyAsDefault = true;
+
+            //creating our deployment information (this includes the bytecode already)
+            //This example creates an NFT Property (Real state) registry
+            var erc721Deployment = new ERC721EnumerableUriStorageDeployment() { Name = "Property Registry", Symbol = "PR" };
+
+            //Deploy the erc721Minter
+            var deploymentReceipt = await ERC721EnumerableUriStorageService.DeployContractAndWaitForReceiptAsync(web3, erc721Deployment);
+
+            //creating a new service with the new contract address
+            var erc721Service = new ERC721EnumerableUriStorageService(web3, deploymentReceipt.ContractAddress);
+
+            //uploading to ipfs our documents
+            var nftIpfsService = new NFTIpfsService("https://ipfs.infura.io:5001");
+            var imageIpfs = await nftIpfsService.AddFileToIpfsAsync("Images/image1.png");
+            //adding all our document ipfs links to the metadata and the description
+            var metadataNFT = new NftMetadata()
             {
-                BaseURI = "https://ipfs.io/ipfs/",
-                Name = "OPTNETNFTS",
-                Symbol = "OPTNETH",
-                Gas = 7000000
+                Name = "Nethereum + Optimism",
+                Image = "ipfs://" + imageIpfs.Hash, 
+                ExternalUrl = "https://github.com/Nethereum/OptimismTemplate"
+
             };
 
-            var receipt = await MyERC721Service.DeployContractAndWaitForReceiptAsync(web3l2, myERC721Deployment);
+            //Adding the metadata to ipfs
+            var metadataIpfs =
+                await nftIpfsService.AddNftsMetadataToIpfsAsync(metadataNFT, "Metadata.json");
 
-            var byteCode = await web3l2.Eth.GetCode.SendRequestAsync(receipt.ContractAddress);
+            var addressToRegisterOwnership = "0xe612205919814b1995D861Bdf6C2fE2f20cDBd68";
 
-            var service = new MyERC721Service(web3l2, receipt.ContractAddress);
-            var imageNode = await AddImageToIpfs("Images/image1.png");
-            var metadataNode = await AddNftsMetadataToIpfs(new NftMetadata()
-                { Name = "NethereumLovesOptimism", ExternalUrl = "https://github.com/Nethereum/OptimismTemplate/", Image = "https://ipfs.infura.io/ipfs/" + imageNode.Id.ToString() });
+            //Minting the nft with the url to the ipfs metadata
+            var mintReceipt = await erc721Service.MintRequestAndWaitForReceiptAsync(
+                addressToRegisterOwnership, "ipfs://" + metadataIpfs.Hash);
 
-            var receiptMint = await service.MintRequestAndWaitForReceiptAsync(ourAdddress, metadataNode.Id.ToString());
-            var mintedInfo = receiptMint
-                .DecodeAllEvents<OptimismTemplate.Contracts.MyERC721.ContractDefinition.TransferEventDTO>().FirstOrDefault();
+            //we have just minted our first nft so the nft will have the id of 0. 
+            var ownerOfToken = await erc721Service.OwnerOfQueryAsync(0);
 
+            Assert.True(ownerOfToken.IsTheSameAddress(addressToRegisterOwnership));
 
-            var tokenMetadataUri = await service.TokenURIQueryAsync(mintedInfo.Event.TokenId);
+            var addressOfToken = await erc721Service.TokenURIQueryAsync(0);
 
-            var client = new WebClient();
+            Assert.Equal("ipfs://" + metadataIpfs.Hash, addressOfToken);
 
-            var nftMetadataJson = await client.DownloadStringTaskAsync(new Uri(tokenMetadataUri));
-
-            var nftMetadata = JsonConvert.DeserializeObject<NftMetadata>(nftMetadataJson);
-
-            Assert.Equal("https://ipfs.infura.io/ipfs/" + imageNode.Id.ToString(), nftMetadata.Image);
-
-            var ps = new ProcessStartInfo(nftMetadata.Image)
+            var ps = new ProcessStartInfo("https://ipfs.infura.io/ipfs/" + imageIpfs.Hash)
             {
                 UseShellExecute = true,
                 Verb = "open"
             };
             Process.Start(ps);
-
-        }
-
-
-        public class NftMetadata
-        {
-            [JsonProperty("name")]
-            public string Name { get; set; }
-            [JsonProperty("description")]
-            public string Description { get; set; }
-            [JsonProperty("external_url")]
-            public string ExternalUrl { get; set; }
-            [JsonProperty("image")]
-            public string Image { get; set; }
-        }
-
-
-        public async Task<IFileSystemNode> AddNftsMetadataToIpfs(NftMetadata metadata)
-        {
-            var ipfsClient = new IpfsClient("https://ipfs.infura.io:5001");
-            using (var ms = new MemoryStream())
-            {
-                var serializer = new JsonSerializer();
-                var jsonTextWriter = new JsonTextWriter(new StreamWriter(ms));
-                serializer.Serialize(jsonTextWriter, metadata);
-                jsonTextWriter.Flush();
-                ms.Position = 0;
-                var node = await ipfsClient.FileSystem.AddAsync(ms);
-                await ipfsClient.Pin.AddAsync(node.Id);
-                return node;
-            }
-        }
-
-        public async Task<IFileSystemNode> AddImageToIpfs(string path)
-        {
-            var ipfsClient = new IpfsClient("https://ipfs.infura.io:5001");
-            var node = await ipfsClient.FileSystem.AddFileAsync(path);
-            await ipfsClient.Pin.AddAsync(node.Id);
-            return node;
 
         }
     }

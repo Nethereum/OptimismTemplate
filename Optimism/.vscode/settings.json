@@ -1,5 +1,4 @@
 {
-    "solidity.compileUsingRemoteVersion": "v0.7.6+commit.7338295f",
-    "solidity.nodemodulespackage": "@eth-optimism/solc",
-    "solidity.defaultCompiler": "remote"
+    "solidity.compileUsingRemoteVersion": "v0.8.11+commit.d7f03943",
+    "solidity.packageDefaultDependenciesDirectory": "contracts/node_modules"
 }
