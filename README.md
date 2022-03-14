@@ -39,7 +39,7 @@ It is already preconfigured to autogenerate your code too :)
 
 ## Eth bride L1 <-> L2
 ```csharp
-  var web3l1 = new Web3(new Account("YOUR PRIVATE KEY", 42), "https://kovan.infura.io/v3/3e2d593aa68042cc8cce973b4b5d23ef");
+  var web3l1 = new Web3(new Account("YOUR PRIVATE KEY", 42), "https://kovan.infura.io/v3/<<InfuraId>>");
   var web3l2 = new Web3(new Account("YOUR PRIVATE KEY", 69), "https://kovan.optimism.io");
 
   var ourAdddress = web3l1.TransactionManager.Account.Address;
@@ -108,7 +108,7 @@ It is already preconfigured to autogenerate your code too :)
 ## Token bridge L1 <-> L2
 
 ```csharp
-  var web3l1 = new Web3(new Account("YOUR PRIVATE KEY", 42), "https://kovan.infura.io/v3/3e2d593aa68042cc8cce973b4b5d23ef");
+  var web3l1 = new Web3(new Account("YOUR PRIVATE KEY", 42), "https://kovan.infura.io/v3/<<InfuraId>>");
   var web3l2 = new Web3(new Account("YOUR PRIVATE KEY", 69), "https://kovan.optimism.io");
   web3l2.TransactionManager.UseLegacyAsDefault = true;
 
